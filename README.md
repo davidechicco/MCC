@@ -7,8 +7,10 @@ To use this script, you need to have **R (≥ 3.3.0)** installed on your compute
 * **ggplot2**
 * **cowplot**
 
-To run the script, you have to clone or download this repository, and then run the following command:
+To run the main script, you have to clone or download this repository, and then run the following commands:
+
+`cd bin`
 
 `Rscript script_pies_and_barplots.r`
 
-The program will generate the output pdf files of the plot images in the `plot` folder.
+The program will generate the output pdf files of the plot images in the `plots` folder.
