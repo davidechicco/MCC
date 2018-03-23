@@ -10,11 +10,12 @@ library(gridExtra)
 library(gtable)
 library(ggplot2)
 library(cowplot)
-library(ggpubr)
+
+SAVE_FILES = FALSE
 
 digits = 2
 
-thisLegendTextSize = 5
+generalTextSize = 5
 
 # Confusion matrix barplot
 barplot_creator <- function(inputText, saveFileName, upperYlim) {
@@ -26,10 +27,13 @@ barplot_creator <- function(inputText, saveFileName, upperYlim) {
 
 
     p <- ggplot(confusionMatrixDataFrame, aes(x=category, y=amount)) + geom_bar(aes(fill=category), stat="identity", position=position_dodge()) + ylim(0,upperYlim)
-    p + scale_colour_brewer(palette="RdBu")
-    p + theme(legend.text=element_text(size=thisLegendTextSize))
+    p + scale_colour_brewer(palette="RdBu") + xlab("") + ylab("")
+    p + theme(legend.text=element_text(size=generalTextSize), text = element_text(size=generalTextSize), axis.text.x = element_text(size=generalTextSize), axis.text.y = element_text(size=generalTextSize))
     p
-    # ggsave(saveFileName)
+    
+    if (SAVE_FILES==TRUE) {
+        ggsave(saveFileName)
+    }
   
     return(p)
 }
@@ -142,9 +146,12 @@ confusion_matrix_pie <- function(tp, fn, tn, fp, saveFileName) {
     geom_bar(width = 1.0, stat = "identity")
 
     thisPie <- thisBarPlot + coord_polar("y") + xlab("") + ylab("") + scale_fill_brewer(palette="RdBu")
-    thisPie + theme(legend.text=element_text(size=thisLegendTextSize))
+    thisPie + theme(legend.text=element_text(size=generalTextSize))
     thisPie
-    # ggsave(saveFileName)
+    
+    if (SAVE_FILES==TRUE) {
+        ggsave(saveFileName)
+    }
     
     return(thisPie)
 
@@ -165,9 +172,11 @@ positive_negative_pie <- function(pos, neg, saveFileName) {
     geom_bar(width = 1.0, stat = "identity")
     
     thisPie <- thisBarPlot + coord_polar("y") + xlab("") + ylab("") + scale_fill_brewer(palette="RdBu")
-    thisPie + theme(legend.text=element_text(size=thisLegendTextSize))
+    thisPie + theme(legend.text=element_text(size=generalTextSize))
     thisPie
-    # ggsave(saveFileName)
+    if (SAVE_FILES==TRUE) {
+        ggsave(saveFileName)
+    }
 
     return(thisPie)
 }
@@ -210,7 +219,8 @@ generate_all_the_plots <- function(tp, fn, tn, fp, addTitle) {
     # right_col_plot = plot_grid(plot_cf, plot_pos_neg, labels=c("b", "c"), align="v", ncol=1)
     # plot_grid(plot_scores, right_col_plot, ncol = 2, rel_widths=c(1.3, 1))
 
-    general_plot <- plot_grid(plot_cf, plot_pos_neg, plot_scores, ncol = 2, align="v", labels=c("A", "B", "C"), label_size=5)
+    theme_set(theme_cowplot(font_size=12))
+    general_plot <- plot_grid(plot_cf, plot_pos_neg, plot_scores, ncol = 2, align="h", labels=c("A", "B", "C"), label_size=5)
     
     save_plot("../plots/general.pdf", general_plot)
     
@@ -230,7 +240,7 @@ exampleC = c(1, 9, 89, 1)
 selected_example <- exampleC
 addTitle = "ExampleC"
 
-library(gsubfn)  # need 0.7-0 or later
+#library(gsubfn)  # need 0.7-0 or later
 generate_all_the_plots(selected_example[1], selected_example[2], selected_example[3], selected_example[4], addTitle)
 
 
