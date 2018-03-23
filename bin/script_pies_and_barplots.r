@@ -15,20 +15,21 @@ SAVE_FILES = FALSE
 
 digits = 2
 
-generalTextSize = 5
+generalTextSize = 12
 
-# Confusion matrix barplot
+# Barplot matrix barplot
 barplot_creator <- function(inputText, saveFileName, upperYlim) {
 
     confusionMatrixDataFrame <- read.table(header=TRUE, text=inputText)
 
     confusionMatrixDataFrame$category = gsub("_", " ", confusionMatrixDataFrame$category)
+    confusionMatrixDataFrame$category = gsub("=", " = ", confusionMatrixDataFrame$category)
     confusionMatrixDataFrame$category = factor(confusionMatrixDataFrame$category, levels=unique(confusionMatrixDataFrame$category))
 
 
-    p <- ggplot(confusionMatrixDataFrame, aes(x=category, y=amount)) + geom_bar(aes(fill=category), stat="identity", position=position_dodge()) + ylim(0,upperYlim)
-    p + scale_colour_brewer(palette="RdBu") + xlab("") + ylab("")
-    p + theme(legend.text=element_text(size=generalTextSize), text = element_text(size=generalTextSize), axis.text.x = element_text(size=generalTextSize), axis.text.y = element_text(size=generalTextSize))
+    p <- ggplot(confusionMatrixDataFrame, aes(x=category, y=amount)) + geom_bar(aes(fill=category), stat="identity", position=position_dodge()) + ylim(0,upperYlim) + theme(axis.title.x=element_blank(), axis.title.y=element_blank(), legend.title=element_blank(), legend.text=element_text(size=generalTextSize), text = element_text(size=generalTextSize), axis.text.x = element_text(size=generalTextSize), axis.text.y = element_text(size=generalTextSize))
+    p + scale_colour_brewer(palette="RdBu", name="") + xlab("") + ylab("") 
+    # + guides(colour=guide_legend(title=""))
     p
     
     if (SAVE_FILES==TRUE) {
@@ -54,7 +55,7 @@ accuracy_f1score_mcc_barplot <- function(accuracy, f1_score, normMCC, saveFileNa
 # Confusion matrix barplot
 confusion_matrix_barplot <- function(tp, fn, tn, fp, saveFileName) {
 
-    thisText <- paste("\n category amount\n  TP=",tp," ", tp,"\n  FN=", fn," ", fn,"\n\n  TN=",tn," ", tn,"\n  FP=", fp," ", fp,"\n", sep="")
+    thisText <- paste("\n category amount\n  TP =",tp," ", tp,"\n  FN= ", fn," ", fn,"\n\n  TN =",tn," ", tn,"\n  FP =", fp," ", fp,"\n", sep="")
 
     # confusionMatrixDataFrame <- read.table(header=TRUE, text='
     #  category amount
@@ -73,7 +74,7 @@ confusion_matrix_barplot <- function(tp, fn, tn, fp, saveFileName) {
 # Positives negatives barplot
 positives_negatives_barplot <- function(pos, neg, saveFileName) {
 
-    thisText <- paste("\n category amount\n  positives=",pos, " ", pos,"\n  negatives=", neg, " ", neg,"\n", sep="")
+    thisText <- paste("\n category amount\n  positives =",pos, " ", pos,"\n  negatives =", neg, " ", neg,"\n", sep="")
 
     upperYlim = 100
     return(barplot_creator(thisText, saveFileName, upperYlim))
@@ -135,7 +136,7 @@ mcc <- function (tp, fn, tn, fp) {
 confusion_matrix_pie <- function(tp, fn, tn, fp, saveFileName) {
 
     thisDataFrame <- data.frame(
-      category = c(paste("TP=", tp, ""), paste("FN=", fn, ""), paste("TN=", tn, ""), paste("FP=", fp, "")),
+      category = c(paste("TP =", tp, ""), paste("FN =", fn, ""), paste("TN =", tn, ""), paste("FP =", fp, "")),
       amount = c(tp, fn,   tn, fp)
       )
     thisDataFrame$category = factor(thisDataFrame$category, levels=unique(thisDataFrame$category)) # we set as levels to respect this order in the plot legend
@@ -143,7 +144,7 @@ confusion_matrix_pie <- function(tp, fn, tn, fp, saveFileName) {
 
     # Barplot
     thisBarPlot<- ggplot(thisDataFrame, aes(x="", y=amount, fill=category))+
-    geom_bar(width = 1.0, stat = "identity")
+    geom_bar(width = 1.0, stat = "identity") + theme(axis.title.x=element_blank(), axis.title.y=element_blank(), legend.title=element_blank(), legend.text=element_text(size=generalTextSize), text = element_text(size=generalTextSize), axis.text.x = element_text(size=generalTextSize))
 
     thisPie <- thisBarPlot + coord_polar("y") + xlab("") + ylab("") + scale_fill_brewer(palette="RdBu")
     thisPie + theme(legend.text=element_text(size=generalTextSize))
@@ -161,7 +162,7 @@ confusion_matrix_pie <- function(tp, fn, tn, fp, saveFileName) {
 positive_negative_pie <- function(pos, neg, saveFileName) {
 
     thisDataFrame <- data.frame(
-      category = c(paste("positives=", pos, ""), paste("negatives=", neg, "")),
+      category = c(paste("positives =", pos, ""), paste("negatives =", neg, "")),
       amount = c(pos, neg)
       )
     thisDataFrame$category = factor(thisDataFrame$category, levels=unique(thisDataFrame$category)) # we set as levels to respect this order in the plot legend
@@ -169,7 +170,7 @@ positive_negative_pie <- function(pos, neg, saveFileName) {
 
     # Barplot
     thisBarPlot<- ggplot(thisDataFrame, aes(x="", y=amount, fill=category))+
-    geom_bar(width = 1.0, stat = "identity")
+    geom_bar(width = 1.0, stat = "identity") + theme(axis.title.x=element_blank(), axis.title.y=element_blank(), legend.title=element_blank(), legend.text=element_text(size=generalTextSize), text = element_text(size=generalTextSize), axis.text.x = element_text(size=generalTextSize))
     
     thisPie <- thisBarPlot + coord_polar("y") + xlab("") + ylab("") + scale_fill_brewer(palette="RdBu")
     thisPie + theme(legend.text=element_text(size=generalTextSize))
@@ -216,33 +217,36 @@ generate_all_the_plots <- function(tp, fn, tn, fp, addTitle) {
 
 
     ## Side by side
-    # right_col_plot = plot_grid(plot_cf, plot_pos_neg, labels=c("b", "c"), align="v", ncol=1)
-    # plot_grid(plot_scores, right_col_plot, ncol = 2, rel_widths=c(1.3, 1))
+    right_col_plot = plot_grid(plot_cf, plot_pos_neg, labels=c("B", "C"), align="v", ncol=1)
+    general_plot = plot_grid(plot_scores, right_col_plot, labels=c("A", ""),  ncol = 2, rel_widths=c(1.3, 1))
 
-    theme_set(theme_cowplot(font_size=12))
-    general_plot <- plot_grid(plot_cf, plot_pos_neg, plot_scores, ncol = 2, align="h", labels=c("A", "B", "C"), label_size=5)
+    #theme_set(theme_cowplot(font_size=12))
+    # general_plot <- plot_grid(plot_cf, plot_pos_neg, plot_scores, ncol = 2, align="h", labels=c("A", "B", "C"), label_size=5)
     
-    save_plot("../plots/general.pdf", general_plot)
+    # general_plot <- plot_grid(plot_cf, plot_pos_neg, plot_scores, ncol = 3, align="h", labels=c("A", "B", "C"), label_size=5)
     
-    #(plot_cf, plot_pos_neg, plot_scores)
+    general_file = paste("../plots/", test_title, "general.pdf", sep="")
+    ggsave(general_file, general_plot, height = 8, width = 12, units = "in", dpi = 150)
     
+    #save_plot("../plots/general.pdf", general_plot)
+        
     }
 
-exampleA = c(90, 1, 0, 9)
-exampleB = c(47, 3, 5, 45)
-exampleC = c(1, 9, 89, 1)
+#	    tp, fn,   tn, fp
+exampleA = c(90, 1,   0, 9)
+exampleB = c(47, 3,   5, 45)
+exampleC = c(1, 9,    89, 1)
+exampleD = c(60,20,   18, 2)
+exampleE = c(25,55,   3, 17)
 
 # tp = exampleC[1]
 # fn = exampleC[2]
 # tn = exampleC[3]
 # fp = exampleC[4]
 
-selected_example <- exampleC
-addTitle = "ExampleC"
-
-#library(gsubfn)  # need 0.7-0 or later
+selected_example <- exampleE
+addTitle = "ExampleE"
 generate_all_the_plots(selected_example[1], selected_example[2], selected_example[3], selected_example[4], addTitle)
 
 
-
-#if (file.exists("../plots/Rplots.pdf")) file.remove("../plots/Rplots.pdf")
+if (file.exists("../plots/Rplots.pdf")) file.remove("../plots/Rplots.pdf")
