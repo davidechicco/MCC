@@ -217,8 +217,8 @@ generate_all_the_plots <- function(tp, fn, tn, fp, addTitle) {
 
 
     ## Side by side
-    right_col_plot = plot_grid(plot_cf, plot_pos_neg, labels=c("B", "C"), align="v", ncol=1)
-    general_plot = plot_grid(plot_scores, right_col_plot, labels=c("A", ""),  ncol = 2, rel_widths=c(1.3, 1))
+    right_col_plot = plot_grid(plot_cf, plot_pos_neg, labels=c("b", "c"), align="v", ncol=1)
+    general_plot = plot_grid(plot_scores, right_col_plot, labels=c("a", ""),  ncol = 2, rel_widths=c(1.3, 1))
 
     #theme_set(theme_cowplot(font_size=12))
     # general_plot <- plot_grid(plot_cf, plot_pos_neg, plot_scores, ncol = 2, align="h", labels=c("A", "B", "C"), label_size=5)
@@ -236,17 +236,29 @@ generate_all_the_plots <- function(tp, fn, tn, fp, addTitle) {
 exampleA = c(90, 1,   0, 9)
 exampleB = c(47, 3,   5, 45)
 exampleC = c(1, 9,    89, 1)
-exampleD = c(60,20,   18, 2)
-exampleE = c(25,55,   3, 17)
+# exampleD = c(60,20,   18, 2)
+# exampleE = c(25,55,   3, 17)
 
 # tp = exampleC[1]
 # fn = exampleC[2]
 # tn = exampleC[3]
 # fp = exampleC[4]
 
-selected_example <- exampleE
-addTitle = "ExampleE"
+selected_example <- exampleA
+addTitle = "ExampleA"
 generate_all_the_plots(selected_example[1], selected_example[2], selected_example[3], selected_example[4], addTitle)
+
+selected_example <- exampleB
+addTitle = "ExampleB"
+generate_all_the_plots(selected_example[1], selected_example[2], selected_example[3], selected_example[4], addTitle)
+
+selected_example <- exampleC
+addTitle = "ExampleC"
+generate_all_the_plots(selected_example[1], selected_example[2], selected_example[3], selected_example[4], addTitle)
+
+
+
+
 
 
 if (file.exists("../plots/Rplots.pdf")) file.remove("../plots/Rplots.pdf")
