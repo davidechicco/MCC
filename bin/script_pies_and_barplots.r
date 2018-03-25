@@ -225,7 +225,7 @@ generate_all_the_plots <- function(tp, fn, tn, fp, addTitle) {
     
     # general_plot <- plot_grid(plot_cf, plot_pos_neg, plot_scores, ncol = 3, align="h", labels=c("A", "B", "C"), label_size=5)
     
-    general_file = paste("../plots/", test_title, "general.pdf", sep="")
+    general_file = paste("../plots/", test_title, "_general.pdf", sep="")
     ggsave(general_file, general_plot, height = 8, width = 12, units = "in", dpi = 150)
     
     #save_plot("../plots/general.pdf", general_plot)
