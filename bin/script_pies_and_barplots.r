@@ -13,6 +13,8 @@ library(cowplot)
 
 SAVE_FILES = FALSE
 
+SAVE_GENERAL_PLOT = FALSE
+
 digits = 2
 
 generalTextSize = 12
@@ -189,8 +191,11 @@ positive_negative_pie <- function(pos, neg, saveFileName) {
 generate_all_the_plots <- function(tp, fn, tn, fp, addTitle) {
 
     randomValue = sample(1:10000000, 1)
-    test_title = paste(addTitle, "_test",randomValue,"__TP",tp,"_FN",fn,"_TN",tn,"_FP",fp,  sep="")
+    #test_title = paste(addTitle, "_test",randomValue,"__TP",tp,"_FN",fn,"_TN",tn,"_FP",fp,  sep="")
+    test_title = paste(addTitle, "_test",randomValue, sep="")
 
+    print(test_title)
+    
     positives = tp + fn
     negatives = tn + fp
 
@@ -205,8 +210,11 @@ generate_all_the_plots <- function(tp, fn, tn, fp, addTitle) {
 
     current_normMCC = (current_MCC+1)/2 # normalized MCC
     current_normMCC = round(current_normMCC, digits)
-    cat("normMCC = ", round(current_normMCC, digits), "\t\t in the [0; 1] interval\n")
+    cat("normMCC = ", round(current_normMCC, digits), "\t\t in the [0; 1] interval\n\n")
 
+    cat(positives, " & ", negatives, " & ", tp, " & ", fn, " & ", tn, " & ", fp, " & ", current_accuracy, " & ", current_f1_score, " & ", current_MCC, "\n\n")
+    
+    
     confusion_matrix_barplot_file_name = paste("../plots/", test_title, "_confusion_matrix_barplot.pdf", sep="")
     # confusion_matrix_barplot(tp, fn, tn, fp, confusion_matrix_barplot_file_name)
     positives_negatives_barplot_file_name = paste("../plots/", test_title, "_positives_negatives_barplot.pdf", sep="")
@@ -226,30 +234,84 @@ generate_all_the_plots <- function(tp, fn, tn, fp, addTitle) {
     # general_plot <- plot_grid(plot_cf, plot_pos_neg, plot_scores, ncol = 3, align="h", labels=c("A", "B", "C"), label_size=5)
     
     general_file = paste("../plots/", test_title, "_general.pdf", sep="")
-    ggsave(general_file, general_plot, height = 8, width = 12, units = "in", dpi = 150)
+    
+    if (SAVE_GENERAL_PLOT) {
+      ggsave(general_file, general_plot, height = 8, width = 12, units = "in", dpi = 150)
+    }
     
     #save_plot("../plots/general.pdf", general_plot)
         
     }
 
 #	    tp, fn,   tn, fp
-exampleA = c(90, 1,   0, 9)
-exampleB = c(47, 3,   5, 45)
-exampleC = c(1, 9,    89, 1)
+exampleA1 = c(90, 1,   0, 9)	# good on TP, bad on TN: A1_case_pos_imb_yesTP_noTN
+exampleA2 = c(5, 70,   19, 6)	# good on TP, bad on TN: A2_case_pos_imb_noTP_yesTN
 
-exampleD = c(60,20,   18, 2)
-exampleE = c(25,3,   55, 17)
+exampleB1 = c(47, 3,   5, 45)	# good on TP, bad on TN: B1_case_bal_yesTP_noTN
+exampleB2 = c(10, 40, 46, 4)	# bad on TP, good on TN: B2_case_bal_noTP_yes_TN
 
-# tp = exampleC[1]
-# fn = exampleC[2]
-# tn = exampleC[3]
-# fp = exampleC[4]
+exampleC1 = c(9, 1,    1, 89)	# bad on TP, good on TN: C1_case_neg_imb_yesTP_noTN
+exampleC2 = c(2, 9,    88, 1)	# bad on TP, good on TN: C2_case_neg_imb_noTP_yesTN
 
-selected_example <- exampleE
-addTitle = "ExampleE"
+# selected_example <- exampleA1
+# addTitle = "A1_case_pos_imb_yesTP_noTN"
+# generate_all_the_plots(selected_example[1], selected_example[2], selected_example[3], selected_example[4], addTitle)
+# 
+# selected_example <- exampleA2
+# addTitle = "A2_case_pos_imb_noTP_yesTN"
+# generate_all_the_plots(selected_example[1], selected_example[2], selected_example[3], selected_example[4], addTitle)
+# 
+# 
+# selected_example <- exampleB1
+# addTitle = "B1_case_bal_yesTP_noTN"
+# generate_all_the_plots(selected_example[1], selected_example[2], selected_example[3], selected_example[4], addTitle)
+# 
+# selected_example <- exampleB2
+# addTitle = "B2_case_bal_noTP_yes_TN"
+# generate_all_the_plots(selected_example[1], selected_example[2], selected_example[3], selected_example[4], addTitle)
+# 
+# 
+# selected_example <- exampleC1
+# addTitle = "C1_case_neg_imb_yesTP_noTN"
+# generate_all_the_plots(selected_example[1], selected_example[2], selected_example[3], selected_example[4], addTitle)
+# 
+# selected_example <- exampleC2
+# addTitle = "C2_case_neg_imb_noTP_yesTN"
+# generate_all_the_plots(selected_example[1], selected_example[2], selected_example[3], selected_example[4], addTitle)
+
+#	    tp, fn,   tn, fp
+exampleA3 = c(90, 1,   9, 1)	# good on TP, bad on TN: A3_case_pos_imb_yesTP_yesTN
+exampleA4 = c(5, 70,   6,19)	# good on TP, bad on TN: A4_case_pos_imb_noTP_noTN
+
+exampleB3 = c(47, 3,   45, 5)	# good on TP, bad on TN: B3_case_bal_yesTP_yesTN
+exampleB4 = c(10, 40, 4, 46)	# bad on TP, good on TN: B4_case_bal_noTP_no_TN
+
+exampleC3 = c(9, 1,    89, 1)	# bad on TP, good on TN: C3_case_neg_imb_yesTP_yesTN
+exampleC4 = c(2, 9,    1, 88)	# bad on TP, good on TN: C4_case_neg_imb_noTP_noTN
+
+selected_example <- exampleA3
+addTitle = "A3_case_pos_imb_yesTP_yesTN"
 generate_all_the_plots(selected_example[1], selected_example[2], selected_example[3], selected_example[4], addTitle)
 
+selected_example <- exampleA4
+addTitle = "A4_case_pos_imb_noTP_noTN"
+generate_all_the_plots(selected_example[1], selected_example[2], selected_example[3], selected_example[4], addTitle)
 
+selected_example <- exampleB3
+addTitle = "B3_case_bal_yesTP_yesTN"
+generate_all_the_plots(selected_example[1], selected_example[2], selected_example[3], selected_example[4], addTitle)
+
+selected_example <- exampleB4
+addTitle = "B4_case_bal_noTP_no_TN"
+generate_all_the_plots(selected_example[1], selected_example[2], selected_example[3], selected_example[4], addTitle)
+
+selected_example <- exampleC3
+addTitle = "C3_case_neg_imb_yesTP_yesTN"
+generate_all_the_plots(selected_example[1], selected_example[2], selected_example[3], selected_example[4], addTitle)
+
+selected_example <- exampleC4
+addTitle = "C4_case_neg_imb_noTP_noTN"
+generate_all_the_plots(selected_example[1], selected_example[2], selected_example[3], selected_example[4], addTitle)
 
 
 if (file.exists("./Rplots.pdf")) file.remove("./Rplots.pdf")
