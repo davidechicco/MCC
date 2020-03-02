@@ -1,4 +1,4 @@
-# The power of the Matthews correlation coefficient (MCC) in binary classification evaluation
+# The advantages of the Matthews correlation coefficient (MCC) in binary classification evaluation
 Script thar generates R plots for the comparison between Matthews correlation coefficient (MCC), accuracy, and F1 score.
 
 To use this script, you need to have **R (≥ 3.3.0)** installed on your computer, together with the following R packages:
@@ -15,7 +15,10 @@ To run the main script, you have to clone or download this repository, and then 
 
 The program will generate the output pdf files of the plot images in the `plots` folder.
 
-# Contacts and support
-This software was developed by [Davide Chicco](http://www.davidechicco.it) at the [Peter Munk Cardiac Centre](https://www.uhnresearch.ca/institutes/pmcc) (Toronto, Ontario, Canada).
+### Paper
+Additional information about this project is available in the following peer-reviewed published article:
 
-For any question or information, please write to [davidechicco@davidechicco.it](mailto:davidechicco@davidechicco.it)
+> Davide Chicco, Giuseppe Jurman. "[The advantages of the Matthews correlation coefficient (MCC) over F1 score and accuracy in binary classification evaluation](https://doi.org/10.1186/s12864-019-6413-7)". BMC Genomics 21, 6 (2020). 
+
+### Contacts
+For any enquire, please write to [Davide Chicco](https://www.davidechicco.it) (Krembil Research Institute) at [davidechicco(AT)davidechicco.it](mailto:davidechicco@davidechicco.it)
